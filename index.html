@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Grupo de Alabanza TBBC</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="login-view" class="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <i data-lucide="music"></i>
+            </div>
+            <h1 class="login-title">Grupo de Alabanza TBBC</h1>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Ingresa tu código personal para acceder al sistema</p>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <input type="password" id="login-pin" class="input-field text-center" style="font-size: 1.5rem; letter-spacing: 0.5rem;" placeholder="****" maxlength="16" required>
+                </div>
+                <div id="login-error" class="hidden" style="color: var(--error); margin-bottom: 1rem; font-size: 0.875rem;">Código incorrecto</div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 0.75rem;">
+                    Ingresar <i data-lucide="arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL -->
+    <div id="app-view" class="hidden">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <i data-lucide="music"></i> TBBC Alabanza
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="current-user-name" style="font-weight: 500;"></span>
+                <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;" title="Cambiar tema">
+                    <i data-lucide="moon"></i>
+                </button>
+                <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem;" title="Cerrar sesión">
+                    <i data-lucide="log-out"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div class="app-container">
+            <!-- Menú de navegación principal -->
+            <div class="tabs">
+                <div class="tab active" data-target="home-tab">Inicio</div>
+                <div class="tab" data-target="repertoire-tab">Repertorio</div>
+                <div class="tab" data-target="events-tab">🎉 Eventos Próximos</div>
+                <div class="tab" data-target="library-tab">Biblioteca</div>
+                <div class="tab" data-target="history-tab">Historial</div>
+                <div id="admin-tab-btn" class="tab hidden" data-target="admin-tab">Admin</div>
+            </div>
+
+            <!-- VISTA: INICIO -->
+            <div id="home-tab" class="view-section">
+                <div id="welcome-message-container" class="card" style="margin-bottom: 1.5rem; background-color: rgba(30, 58, 138, 0.05); border-left: 4px solid var(--primary);">
+                    <h3 id="welcome-title" style="margin-bottom: 0.5rem; font-size: 1.25rem;">Hola, Cargando...</h3>
+                    <p id="welcome-text" style="color: var(--text-main); font-size: 0.95rem;">
+                        Recuerda elegir las canciones para la fecha...
+                    </p>
+                </div>
+                <h2 style="margin-bottom: 1rem;">Próximo Domingo</h2>
+                <div class="card">
+                    <div class="flex justify-between items-center mb-4" style="margin-bottom: 1rem;">
+                        <h3 id="next-sunday-date" style="font-size: 1.25rem;">Cargando...</h3>
+                        <span id="repertoire-status" class="badge badge-warning">En preparación</span>
+                    </div>
+                    <p style="margin-bottom: 0.5rem; color: var(--text-muted);">
+                        Canciones registradas: <strong id="song-count" style="color: var(--text-main);">0</strong>
+                    </p>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="mic-2" style="width:15px; height:15px; color: var(--accent); flex-shrink:0;"></i>
+                        Responsable del repertorio:
+                        <strong id="home-singer-name" style="color: var(--accent);">—</strong>
+                    </p>
+                    <div class="home-action-btns">
+                        <button id="btn-go-repertoire" class="btn btn-primary">
+                            <i data-lucide="calendar"></i> Ver Repertorio
+                        </button>
+                        <a id="btn-home-playlist" href="#" target="_blank" class="btn" style="background: linear-gradient(135deg,#ff0000,#c4302b); color: white; text-decoration: none;">
+                            <i data-lucide="youtube"></i> Playlist YouTube
+                        </a>
+                        <button id="btn-google-calendar" class="btn btn-outline">
+                            <i data-lucide="bell"></i> Recordatorio
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA: REPERTORIO -->
+            <div id="repertoire-tab" class="view-section hidden">
+
+                <!-- === CANCIONES A APRENDER (fijo arriba) === -->
+                <div id="songs-to-learn-panel" class="stl-panel">
+                    <div class="stl-header">
+                        <div class="stl-title">
+                            <i data-lucide="graduation-cap"></i>
+                            <span>Canciones a Aprender</span>
+                        </div>
+                        <button id="btn-add-to-learn" class="btn btn-accent" style="padding: 0.4rem 0.9rem; font-size: 0.85rem;">
+                            <i data-lucide="plus"></i> Agregar
+                        </button>
+                    </div>
+                    <div id="stl-list"></div>
+                </div>
+                <!-- === FIN CANCIONES A APRENDER === -->
+
+                <div class="rep-header">
+                    <h2>Repertorio Semanal</h2>
+                    <div class="rep-header-actions">
+                        <a id="btn-open-yt-direct" href="#" target="_blank" class="btn btn-yt">
+                            <i data-lucide="youtube"></i> Playlist en YouTube
+                        </a>
+                        <select id="repertoire-date-picker" class="input-field rep-date-picker">
+                            <!-- Options generated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <div id="admin-complete-container" class="hidden" style="margin-bottom: 1rem; display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap;">
+                    <button id="btn-send-repertoire-email" class="btn btn-primary" style="background-color: var(--primary-light);">
+                        <i data-lucide="mail"></i> Enviar Correos de Recordatorio
+                    </button>
+                    <button id="btn-complete-repertoire" class="btn btn-outline" style="color: var(--success); border-color: var(--success);">
+                        <i data-lucide="check-circle"></i> Marcar como Completado
+                    </button>
+                </div>
+                
+                <!-- Indicador de turno y modo de lectura -->
+                <div id="repertoire-turn-indicator" style="margin-bottom: 1.25rem;"></div>
+
+                <div class="input-group" style="margin-bottom: 1.5rem;">
+                    <input type="text" id="repertoire-biblical-text" class="input-field" placeholder="Texto bíblico relacionado (Opcional)..." style="font-style: italic; background-color: var(--bg-main);">
+                </div>
+                
+                <h3 style="margin-top: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Canciones</h3>
+                <!-- Lista de Canciones del Repertorio agrupadas por integrante -->
+                <div id="rep-songs" class="rep-sub-view">
+                    <div id="singers-lists"></div>
+                    <button class="btn btn-accent mt-4 btn-add-rep" data-type="songs" style="margin-top: 1rem;">
+                        <i data-lucide="plus"></i> Agregar Canción
+                    </button>
+                </div>
+
+                <h3 style="margin-top: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Coros</h3>
+                <div id="rep-choruses" class="rep-sub-view">
+                    <div id="choruses-list"></div>
+                    <button class="btn btn-accent mt-4 btn-add-rep" data-type="choruses" style="margin-top: 1rem;">
+                        <i data-lucide="plus"></i> Agregar Coro
+                    </button>
+                </div>
+
+                <h3 style="margin-top: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem;">Himnos</h3>
+                <div id="rep-hymns" class="rep-sub-view">
+                    <div id="hymns-list"></div>
+                    <button class="btn btn-accent mt-4 btn-add-rep" data-type="hymns" style="margin-top: 1rem;">
+                        <i data-lucide="plus"></i> Agregar Himno
+                    </button>
+                </div>
+            </div>
+
+            <!-- VISTA: BIBLIOTECA -->
+            <div id="library-tab" class="view-section hidden">
+                <div class="flex justify-between items-center" style="margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                    <div>
+                        <h2 style="margin:0;">Biblioteca de Canciones</h2>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">Organiza las canciones en tus carpetas personales.</p>
+                    </div>
+                    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                        <button id="btn-create-folder" class="btn btn-outline" style="display:inline-flex; align-items:center; gap:0.4rem;">
+                            <i data-lucide="folder-plus"></i> Nueva Carpeta
+                        </button>
+                        <button id="btn-new-song" class="btn btn-primary">
+                            <i data-lucide="plus"></i> Nueva Canción
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Barra de Carpetas Personales (Filtros por chip) -->
+                <div id="user-folders-bar" class="folder-pills-bar">
+                    <!-- Chips renderizados dinámicamente -->
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="lib-search" class="input-field" placeholder="Buscar canción por nombre o versión...">
+                </div>
+                <div id="library-list" style="margin-top: 1rem;"></div>
+            </div>
+
+            <!-- VISTA: HISTORIAL -->
+            <div id="history-tab" class="view-section hidden">
+                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                    <h2>Historial</h2>
+                    <div class="flex gap-4">
+                        <button id="btn-export-pdf" class="btn btn-outline"><i data-lucide="file-text"></i> PDF</button>
+                        <button id="btn-export-excel" class="btn btn-outline"><i data-lucide="table"></i> Excel</button>
+                    </div>
+                </div>
+                <div class="card" style="margin-bottom: 1rem;">
+                    <h3>Últimos Movimientos</h3>
+                    <div id="logs-list" style="margin-top: 1rem; max-height: 400px; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- VISTA: EVENTOS PRÓXIMOS -->
+            <div id="events-tab" class="view-section hidden">
+                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2><i data-lucide="calendar-range" style="vertical-align: middle; margin-right: 0.5rem;"></i> Eventos Próximos</h2>
+                        <p style="font-size: 0.9rem; color: var(--text-muted);">Eventos especiales, vigilias y conciertos futuros con su repertorio asignado.</p>
+                    </div>
+                    <button id="btn-create-event" class="btn btn-primary">
+                        <i data-lucide="calendar-plus"></i> Crear Nuevo Evento
+                    </button>
+                </div>
+
+                <div id="events-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- JS renders events here -->
+                </div>
+            </div>
+            
+            <!-- VISTA: ADMIN -->
+            <div id="admin-tab" class="view-section hidden">
+                <h2 style="margin-bottom: 1.5rem;">Panel de Administración</h2>
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <!-- Usuarios existentes -->
+                    <div class="card">
+                        <h3><i data-lucide="users"></i> Gestión de Usuarios</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Administra PINs, correos, pausa o elimina integrantes. <span style="color:#f59e0b;">⏸ Pausar</span> = se salta el turno automáticamente.</p>
+                        <div id="admin-users-list" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
+                    </div>
+
+                    <!-- Crear nuevo usuario -->
+                    <div class="card">
+                        <h3><i data-lucide="user-plus"></i> Crear Nuevo Usuario</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">Crea integrantes, usuarios de sonido o invitados con acceso personalizado.</p>
+                        <form id="form-create-user" style="display:flex; flex-direction:column; gap:0.75rem;">
+                            <div class="input-group">
+                                <label class="input-label">Nombre <span style="color:var(--error);">*</span></label>
+                                <input type="text" id="new-user-name" class="input-field" placeholder="Ej. María, Sonido 2, Invitado..." required>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">PIN de acceso <span style="color:var(--error);">*</span></label>
+                                <input type="text" id="new-user-pin" class="input-field" placeholder="Ej. 1234, clave123..." maxlength="16" required style="font-family:monospace; font-weight:600;">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Rol <span style="color:var(--error);">*</span></label>
+                                <select id="new-user-role" class="input-field" required>
+                                    <option value="integrante">🎤 Integrante (puede colocar canciones)</option>
+                                    <option value="sonido">🎛️ Sonido (solo espectar)</option>
+                                    <option value="invitado">🤝 Invitado (solo espectar)</option>
+                                    <option value="espectador">👁️ Espectador (solo espectar)</option>
+                                    <option value="admin">👑 Administrador (control total)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Correo electrónico (Opcional)</label>
+                                <input type="email" id="new-user-email" class="input-field" placeholder="correo@ejemplo.com">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="justify-content: center; margin-top: 0.25rem;">
+                                <i data-lucide="user-plus"></i> Crear Usuario
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Configuración de Email -->
+                <div class="card">
+                    <h3><i data-lucide="mail"></i> Configuración de Correos Automáticos (EmailJS)</h3>
+                    <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;">
+                        <div>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                                Conecta tu cuenta gratuita de <a href="https://www.emailjs.com/" target="_blank" style="color:var(--primary-light);">EmailJS</a> para enviar correos reales a los integrantes.
+                            </p>
+                            <form id="form-email-settings">
+                                <div class="input-group" style="margin-bottom: 0.75rem;">
+                                    <label class="input-label" style="font-size:0.8rem;">Service ID</label>
+                                    <input type="text" id="emailjs-service-id" class="input-field" placeholder="ej. service_tbbc">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 0.75rem;">
+                                    <label class="input-label" style="font-size:0.8rem;">Template ID</label>
+                                    <input type="text" id="emailjs-template-id" class="input-field" placeholder="ej. template_tbbc">
+                                </div>
+                                <div class="input-group" style="margin-bottom: 0.75rem;">
+                                    <label class="input-label" style="font-size:0.8rem;">Public Key (User ID)</label>
+                                    <input type="text" id="emailjs-public-key" class="input-field" placeholder="ej. user_xyz123abc">
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; justify-content: center;">
+                                    <i data-lucide="save"></i> Guardar Credenciales EmailJS
+                                </button>
+                            </form>
+                        </div>
+                        <div>
+                            <h4>Acciones de Correo</h4>
+                            <button id="btn-send-emails" class="btn btn-accent" style="width: 100%; margin-top: 0.5rem; justify-content: center;">
+                                <i data-lucide="send"></i> Enviar Correo de Prueba a Admin
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>Grupo de Alabanza TBBC &copy; 2026</p>
+        </footer>
+    </div>
+
+    <!-- MODALES -->
+    <!-- Modal Evaluar Canción -->
+    <div id="modal-evaluation" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Evaluar Canción</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="form-evaluation">
+                <input type="hidden" id="eval-song-id">
+                <input type="hidden" id="eval-rep-date">
+                <div class="input-group">
+                    <label class="input-label">Calificación</label>
+                    <select id="eval-rating" class="input-field" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Excelente">Excelente</option>
+                        <option value="Bien">Bien</option>
+                        <option value="Más o menos">Más o menos</option>
+                        <option value="Mal">Mal</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Comentario / Área de Mejora</label>
+                    <textarea id="eval-comment" class="input-field" rows="3" placeholder="Ej. Hubo problemas de tiempo, el tono estaba muy alto..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4" style="width: 100%; margin-top: 1rem;">Guardar Evaluación</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ver Comentarios de Canción -->
+    <div id="modal-eval-history" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Historial de Mejoras</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="eval-history-content" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
+                <!-- Evaluaciones aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ver Repertorio Resumen -->
+    <div id="modal-view-rep" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Repertorio Seleccionado</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div id="view-rep-content" style="max-height: 400px; overflow-y: auto; padding-right: 0.5rem; margin-top: 1rem;">
+                <!-- Lista de canciones se renderiza aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar/Editar Canción a Biblioteca -->
+    <div id="modal-song" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-song-title">Nueva Canción</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="form-song">
+                <input type="hidden" id="song-id">
+                <div class="input-group">
+                    <label class="input-label">Nombre de la canción (Obligatorio)</label>
+                    <input type="text" id="song-name" class="input-field" placeholder="Ej. Gracia Sublime, Dios Poderoso..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Versión / Quién la canta (Obligatorio)</label>
+                    <input type="text" id="song-version" class="input-field" placeholder="Ej. Marcos Witt, Miel San Marcos, Maverick City..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Enlace / Link de la canción (YouTube/Spotify) <span style="color:var(--error);">*</span></label>
+                    <input type="url" id="song-link" class="input-field" placeholder="https://youtube.com/watch?v=..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Letra (Opcional)</label>
+                    <textarea id="song-lyrics" class="input-field" rows="3" placeholder="Letra de la canción..."></textarea>
+                </div>
+                <!-- Tonos (Solo Admin) -->
+                <div id="song-tones-section" class="hidden" style="margin-top: 1rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <h4 style="margin: 0;">Tonos de Cantantes</h4>
+                        <span class="badge badge-primary" style="font-size: 0.7rem;">Solo Administrador</span>
+                    </div>
+                    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 0.5rem;">
+                        <div>
+                            <label class="input-label">Jelissa</label>
+                            <input type="text" id="tone-jelissa" class="input-field" placeholder="Ej. A">
+                        </div>
+                        <div>
+                            <label class="input-label">Yaneyri</label>
+                            <input type="text" id="tone-yaneyri" class="input-field" placeholder="Ej. F">
+                        </div>
+                        <div>
+                            <label class="input-label">Betty</label>
+                            <input type="text" id="tone-betty" class="input-field" placeholder="Ej. C">
+                        </div>
+                        <div>
+                            <label class="input-label">Euris</label>
+                            <input type="text" id="tone-euris" class="input-field" placeholder="Ej. G">
+                        </div>
+                        <div>
+                            <label class="input-label">Johan</label>
+                            <input type="text" id="tone-johan" class="input-field" placeholder="Ej. D">
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4" style="width: 100%; margin-top: 1rem;">Guardar Canción</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Seleccionar Canción para Repertorio -->
+    <div id="modal-select-rep" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>Agregar al Repertorio</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="input-group">
+                <input type="text" id="search-to-add" class="input-field" placeholder="Buscar en biblioteca o favoritas...">
+            </div>
+            <div id="select-rep-list" style="max-height: 300px; overflow-y: auto;">
+                <!-- Opciones de canciones se renderizan aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Canción a Aprender -->
+    <div id="modal-add-to-learn" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3>Agregar Canción a Aprender</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="form-add-to-learn">
+                <div class="input-group">
+                    <label class="input-label">Nombre de la canción (Obligatorio) <span style="color:var(--error);">*</span></label>
+                    <input type="text" id="stl-name" class="input-field" required placeholder="Ej. Cuán Grande Es Él">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Versión / Quién la canta (Obligatorio) <span style="color:var(--error);">*</span></label>
+                    <input type="text" id="stl-version" class="input-field" required placeholder="Ej. Miel San Marcos, Marcos Witt, En Espíritu y En Verdad...">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Enlace / Link de la canción (YouTube/Spotify) <span style="color:var(--error);">*</span></label>
+                    <input type="url" id="stl-link" class="input-field" placeholder="https://youtube.com/..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Fecha de tu Turno / Repertorio <span style="color:var(--error);">*</span></label>
+                    <select id="stl-date" class="input-field" required>
+                        <!-- Opciones generadas según el turno del integrante -->
+                    </select>
+                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
+                        📅 Solo se muestran las fechas que corresponden a tu turno. La canción se añadirá automáticamente al repertorio de ese día.
+                    </p>
+                </div>
+                <button type="submit" class="btn btn-accent" style="width: 100%; margin-top: 0.5rem; justify-content: center;">
+                    <i data-lucide="plus"></i> Agregar a la Lista
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Crear Evento Próximo -->
+    <div id="modal-create-event" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3>Crear Evento Próximo</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="form-create-event">
+                <div class="input-group">
+                    <label class="input-label">Título del Evento <span style="color:var(--error);">*</span></label>
+                    <input type="text" id="event-title" class="input-field" placeholder="Ej. Vigilia de Aniversario, Conferencia de Jóvenes..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Fecha del Evento <span style="color:var(--error);">*</span></label>
+                    <input type="date" id="event-date" class="input-field" required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Link de la Playlist (YouTube/Spotify) <span style="color:var(--error);">*</span></label>
+                    <input type="url" id="event-playlist-link" class="input-field" placeholder="https://youtube.com/playlist?list=..." required>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Descripción / Detalles (Opcional)</label>
+                    <textarea id="event-description" class="input-field" rows="3" placeholder="Ej. Lugar: Templo principal, Hora: 7:30 PM..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; justify-content: center;">
+                    <i data-lucide="calendar-plus"></i> Guardar Evento
+                </button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Modal Enviar Correos de Recordatorio -->
+    <div id="modal-send-email" class="modal-overlay">
+        <div class="modal-content" style="max-width: 540px;">
+            <div class="modal-header">
+                <h3><i data-lucide="mail"></i> Enviar Recordatorio por Correo</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div style="margin-top: 1rem;">
+                <div class="input-group">
+                    <label class="input-label">Destinatarios</label>
+                    <select id="email-recipients-select" class="input-field">
+                        <option value="assigned">Solo al Integrante Asignado al Turno</option>
+                        <option value="all">A Todos los Integrantes del Grupo (7 personas)</option>
+                    </select>
+                </div>
+                <div class="input-group" style="margin-top: 1rem;">
+                    <label class="input-label">Vista Previa del Mensaje</label>
+                    <div id="email-preview-box" style="background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; font-size: 0.85rem; max-height: 220px; overflow-y: auto; white-space: pre-wrap; font-family: inherit; line-height: 1.5;"></div>
+                </div>
+                <div id="email-send-status" style="margin-top: 0.75rem; font-size: 0.85rem;"></div>
+                <button id="btn-confirm-send-email" class="btn btn-primary" style="width: 100%; margin-top: 1rem; justify-content: center;">
+                    <i data-lucide="send"></i> Enviar Correos Ahora
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Crear/Editar Carpeta Personal -->
+    <div id="modal-folder" class="modal-overlay">
+        <div class="modal-content" style="max-width: 420px;">
+            <div class="modal-header">
+                <h3 id="modal-folder-title"><i data-lucide="folder-plus" style="vertical-align:middle; margin-right:4px;"></i> Nueva Carpeta</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="form-folder">
+                <input type="hidden" id="folder-edit-id">
+                <div class="input-group">
+                    <label class="input-label">Nombre de la Carpeta <span style="color:var(--error);">*</span></label>
+                    <input type="text" id="folder-name-input" class="input-field" placeholder="Ej. Adoración, Júbilo, Especiales..." required maxlength="40">
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: -0.5rem; margin-bottom: 1rem;">
+                    🔒 Esta carpeta es personal y solo será visible en tu cuenta.
+                </p>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                    <i data-lucide="folder-check"></i> Guardar Carpeta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Organizar Canción en Carpetas Personales -->
+    <div id="modal-song-folders" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3><i data-lucide="folder" style="vertical-align:middle; margin-right:4px;"></i> Mis Carpetas</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p id="modal-song-folders-song-name" style="font-size: 0.95rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem;"></p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Selecciona en cuáles de tus carpetas personales deseas incluir esta canción:
+            </p>
+            <input type="hidden" id="folder-target-song-id">
+            <div id="modal-song-folders-list" style="display:flex; flex-direction:column; gap:0.5rem; max-height:260px; overflow-y:auto; margin-bottom:1rem;">
+                <!-- Lista de carpetas con checkboxes -->
+            </div>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+                <button id="btn-quick-new-folder" class="btn btn-outline btn-sm" style="display:inline-flex; align-items:center; gap:4px;">
+                    <i data-lucide="plus"></i> Crear otra carpeta
+                </button>
+                <button class="btn btn-primary btn-sm close-modal-action">
+                    Listo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="db.js"></script>
+    <script src="app.js"></script>
+    <script src="playlist.js"></script>
+
+    <!-- Barra de navegación inferior (solo móvil) -->
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navegación principal">
+        <button class="mobile-nav-item active" data-target="home-tab" id="mnav-home">
+            <i data-lucide="home"></i>
+            <span>Inicio</span>
+        </button>
+        <button class="mobile-nav-item" data-target="repertoire-tab" id="mnav-repertoire">
+            <i data-lucide="music"></i>
+            <span>Repertorio</span>
+        </button>
+        <button class="mobile-nav-item" data-target="events-tab" id="mnav-events">
+            <i data-lucide="calendar-days"></i>
+            <span>Eventos</span>
+        </button>
+        <button class="mobile-nav-item" data-target="library-tab" id="mnav-library">
+            <i data-lucide="book-open"></i>
+            <span>Biblioteca</span>
+        </button>
+        <button class="mobile-nav-item" data-target="history-tab" id="mnav-history">
+            <i data-lucide="clock"></i>
+            <span>Historial</span>
+        </button>
+    </nav>
+
+    <script>
+    // Sincronizar bottom nav con el sistema de tabs existente
+    (function() {
+        function syncBottomNav(targetId) {
+            document.querySelectorAll('.mobile-nav-item').forEach(function(item) {
+                item.classList.toggle('active', item.dataset.target === targetId);
+            });
+        }
+
+        // Al hacer click en el bottom nav, activar el tab correspondiente
+        document.querySelectorAll('.mobile-nav-item').forEach(function(navItem) {
+            navItem.addEventListener('click', function() {
+                var target = this.dataset.target;
+                // Simular click en el tab principal
+                var tab = document.querySelector('.tab[data-target="' + target + '"]');
+                if (tab) tab.click();
+                syncBottomNav(target);
+            });
+        });
+
+        // Observar cambios en las secciones para mantener sincronizado
+        var observer = new MutationObserver(function() {
+            var activeSection = document.querySelector('.view-section:not(.hidden)');
+            if (activeSection) {
+                syncBottomNav(activeSection.id);
+            }
+        });
+
+        // Observar todas las view-sections
+        document.querySelectorAll('.view-section').forEach(function(section) {
+            observer.observe(section, { attributes: true, attributeFilter: ['class'] });
+        });
+
+        // Mostrar admin en el bottom nav si aplica
+        var adminTabObs = new MutationObserver(function() {
+            var adminBtn = document.getElementById('admin-tab-btn');
+            if (adminBtn && !adminBtn.classList.contains('hidden')) {
+                var existing = document.getElementById('mnav-admin');
+                if (!existing) {
+                    var adminNavItem = document.createElement('button');
+                    adminNavItem.className = 'mobile-nav-item';
+                    adminNavItem.id = 'mnav-admin';
+                    adminNavItem.dataset.target = 'admin-tab';
+                    adminNavItem.innerHTML = '<i data-lucide="shield"></i><span>Admin</span>';
+                    adminNavItem.addEventListener('click', function() {
+                        var tab = document.querySelector('.tab[data-target="admin-tab"]');
+                        if (tab) tab.click();
+                        syncBottomNav('admin-tab');
+                    });
+                    document.getElementById('mobile-bottom-nav').appendChild(adminNavItem);
+                    lucide.createIcons();
+                }
+            }
+        });
+        var adminBtn = document.getElementById('admin-tab-btn');
+        if (adminBtn) adminTabObs.observe(adminBtn, { attributes: true, attributeFilter: ['class'] });
+    })();
+    </script>
+</body>
+</html>
+

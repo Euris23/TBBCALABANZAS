@@ -1,0 +1,1300 @@
+﻿:root {
+    /* Color Palette */
+    --primary: #1E3A8A; /* Azul oscuro */
+    --primary-light: #2563eb;
+    --accent: #D4AF37; /* Dorado */
+    --accent-hover: #b8972e;
+    --bg-main: #F5F5F5; /* Gris claro */
+    --bg-card: #FFFFFF; /* Blanco */
+    --text-main: #1f2937;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --error: #ef4444;
+    --success: #10b981;
+    
+    /* Layout */
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="dark"] {
+    --primary: #1e40af;
+    --primary-light: #3b82f6;
+    --bg-main: #111827;
+    --bg-card: #1f2937;
+    --text-main: #f9fafb;
+    --text-muted: #9ca3af;
+    --border-color: #374151;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    transition: background-color 0.3s, color 0.3s;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-weight: 600;
+    color: var(--primary);
+}
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3 {
+    color: var(--accent);
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.grid { display: grid; }
+.gap-4 { gap: 1rem; }
+.text-center { text-align: center; }
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+.btn-primary {
+    background-color: var(--primary);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+.btn-accent {
+    background-color: var(--accent);
+    color: #fff;
+}
+.btn-accent:hover {
+    background-color: var(--accent-hover);
+}
+.btn-outline {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+.btn-outline:hover {
+    background-color: var(--border-color);
+}
+.btn-danger {
+    background-color: var(--error);
+    color: white;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 1rem;
+}
+.input-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+.input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-main);
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+/* Cards */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+.card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.navbar-brand i { color: var(--accent); }
+[data-theme="dark"] .navbar-brand { color: var(--accent); }
+
+/* Layout */
+#app-view:not(.hidden) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.app-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Login Screen */
+.login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--bg-main) 100%);
+}
+[data-theme="dark"] .login-screen {
+    background: linear-gradient(135deg, var(--bg-main) 0%, #000 100%);
+}
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: var(--radius);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.login-logo {
+    font-size: 3rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+}
+.login-title {
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+/* Repertoire Tabs */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+}
+.tab {
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.tab:hover {
+    color: var(--primary);
+}
+.tab.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+/* Badges */
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-warning { background-color: #fef3c7; color: #d97706; }
+.badge-success { background-color: #d1fae5; color: #059669; }
+
+/* Song Item */
+.song-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin-bottom: 0.75rem;
+    background-color: var(--bg-card);
+    transition: transform 0.2s;
+}
+.song-item:hover {
+    transform: translateX(4px);
+    border-color: var(--primary-light);
+}
+.song-info h4 { margin-bottom: 0.25rem; font-size: 1.1rem; }
+.song-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 1rem; }
+
+/* Fab Button (Mobile add) */
+.fab {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
+    cursor: pointer;
+    font-size: 1.5rem;
+    z-index: 40;
+    border: none;
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--radius);
+    padding: 2rem;
+    transform: translateY(20px);
+    transition: transform 0.3s;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .app-container { padding: 1rem; }
+    .navbar { padding: 1rem; }
+    .tabs { flex-wrap: nowrap; }
+}
+
+/* ============================================
+   CANCIONES A APRENDER
+   ============================================ */
+.stl-panel {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.06) 0%, rgba(212, 175, 55, 0.08) 100%);
+    border: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem 1rem;
+    margin-bottom: 0rem;
+    position: relative;
+}
+
+.stl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stl-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--accent);
+}
+
+.stl-title i {
+    color: var(--accent);
+    width: 20px;
+    height: 20px;
+}
+
+.stl-empty {
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+/* Tarjeta individual de canción a aprender */
+.stl-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.75rem;
+    transition: box-shadow 0.2s;
+}
+
+.stl-item:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.stl-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.stl-item-name {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--text-main);
+}
+
+.stl-item-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    background-color: rgba(212, 175, 55, 0.12);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.stl-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+}
+
+/* Barra de progreso de checks */
+.stl-progress-bar {
+    height: 5px;
+    background-color: var(--border-color);
+    border-radius: 999px;
+    margin: 0.6rem 0 0.75rem;
+    overflow: hidden;
+}
+
+.stl-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--primary-light));
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+/* Avatares de usuarios con check */
+.stl-checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.stl-check-avatar {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-main);
+    color: var(--text-muted);
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.stl-check-avatar.is-me {
+    border-color: var(--primary-light);
+    color: var(--primary-light);
+}
+
+.stl-check-avatar.is-me:hover {
+    background-color: rgba(37, 99, 235, 0.08);
+    transform: scale(1.05);
+}
+
+.stl-check-avatar.checked {
+    background-color: rgba(16, 185, 129, 0.12);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.stl-check-avatar .stl-check-icon {
+    width: 14px;
+    height: 14px;
+}
+
+.stl-check-timestamp {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
+    display: block;
+}
+
+[data-theme="dark"] .stl-panel {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.15) 0%, rgba(212, 175, 55, 0.1) 100%);
+}
+
+[data-theme="dark"] .stl-item {
+    background-color: var(--bg-card);
+}
+
+/* === CARPETAS PERSONALES DE BIBLIOTECA === */
+.folder-pills-bar {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    scrollbar-width: thin;
+}
+
+.folder-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.folder-pill:hover {
+    border-color: var(--primary-light);
+    color: var(--text-main);
+    background-color: rgba(37, 99, 235, 0.05);
+}
+
+.folder-pill.active {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+}
+
+.folder-pill.active .folder-pill-count {
+    background-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+.folder-pill-count {
+    font-size: 0.72rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background-color: var(--bg-main);
+    color: var(--text-muted);
+}
+
+.folder-pill-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin-left: 0.1rem;
+    opacity: 0.7;
+    transition: all 0.15s;
+    cursor: pointer;
+}
+
+.folder-pill-action:hover {
+    opacity: 1;
+    background-color: rgba(239, 68, 68, 0.2);
+    color: var(--error);
+}
+
+.song-folder-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--primary-light);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    font-weight: 500;
+}
+
+
+/* =============================================
+   PLAYLIST REPRODUCTOR
+   ============================================= */
+
+#modal-playlist.modal-overlay {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    padding: 1rem;
+}
+
+.playlist-modal-content {
+    background: linear-gradient(145deg, #0f0c29, #1a1033, #0e1628) !important;
+    border: 1px solid rgba(124, 58, 237, 0.35) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(124,58,237,0.15) inset !important;
+    max-width: 900px !important;
+    width: 100%;
+    padding: 0 !important;
+    border-radius: 18px !important;
+    overflow: hidden;
+}
+
+.playlist-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.4rem;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.playlist-modal-body {
+    display: flex;
+    gap: 0;
+    min-height: 420px;
+}
+
+.playlist-player-col {
+    flex: 1.4;
+    padding: 1.25rem 1.4rem;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.playlist-queue-col {
+    flex: 1;
+    padding: 1.25rem 1rem 1rem 1.25rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pl-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    color: rgba(255,255,255,0.35);
+    font-size: 0.875rem;
+}
+
+.pl-now-playing {
+    background: rgba(124,58,237,0.12);
+    border: 1px solid rgba(124,58,237,0.25);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.pl-type-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(124, 58, 237, 0.3);
+    color: #c4b5fd;
+}
+
+.pl-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pl-ctrl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+.pl-ctrl-btn:hover {
+    background: rgba(124, 58, 237, 0.4);
+    border-color: rgba(124,58,237,0.6);
+    color: #fff;
+    transform: scale(1.08);
+}
+.pl-ctrl-btn i { width: 18px; height: 18px; }
+
+.pl-ctrl-main {
+    width: 52px !important;
+    height: 52px !important;
+    background: linear-gradient(135deg, #7c3aed, #2563eb) !important;
+    border: none !important;
+}
+.pl-ctrl-main:hover {
+    background: linear-gradient(135deg, #6d28d9, #1d4ed8) !important;
+    transform: scale(1.1);
+}
+.pl-ctrl-main i { width: 22px; height: 22px; }
+
+.pl-ctrl-btn.active-loop {
+    background: rgba(124,58,237,0.4);
+    border-color: rgba(124,58,237,0.7);
+    color: #c4b5fd;
+    opacity: 1 !important;
+}
+
+.pl-ctrl-sm { width: 34px; height: 34px; }
+.pl-ctrl-sm i { width: 15px; height: 15px; }
+
+.pl-playlist-progress {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.pl-playlist-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #2563eb);
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+
+.pl-queue-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1px solid transparent;
+}
+.pl-queue-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.08); }
+.pl-queue-item.active { background: rgba(124,58,237,0.2); border-color: rgba(124,58,237,0.4); }
+.pl-queue-item.played { opacity: 0.45; }
+
+.pl-queue-num { font-size: 0.72rem; color: rgba(255,255,255,0.35); width: 18px; text-align: center; flex-shrink: 0; }
+.pl-queue-item.active .pl-queue-num { color: #c4b5fd; }
+.pl-queue-info { flex: 1; min-width: 0; }
+.pl-queue-name { font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-queue-item.active .pl-queue-name { color: #e9d5ff; }
+.pl-queue-sub { font-size: 0.72rem; color: rgba(255,255,255,0.4); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.pl-queue-badge { font-size: 0.65rem; padding: 0.12rem 0.42rem; border-radius: 999px; background: rgba(212,175,55,0.18); color: #f5c842; font-weight: 600; flex-shrink: 0; }
+.pl-no-link-badge { font-size: 0.65rem; color: rgba(255,255,255,0.2); flex-shrink: 0; }
+
+@media (max-width: 650px) {
+    .playlist-modal-body { flex-direction: column; }
+    .playlist-player-col { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .playlist-queue-col { max-height: 220px; }
+    #pl-queue-list { max-height: 180px !important; }
+}
+
+/* =============================================
+   RESPONSIVO MOVIL � Mobile-First Overrides
+   ============================================= */
+
+/* ---- Meta touch improvements ---- */
+html {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+button, a, .tab, .stl-check-avatar, .folder-pill, .song-item, .pl-queue-item {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ---- Botones m�nimo 44px (touch target) ---- */
+.btn {
+    min-height: 44px;
+    padding: 0.6rem 1.1rem;
+}
+/* Excepcion: boton Escuchar no necesita 44px */
+.btn-listen {
+    min-height: unset;
+}
+
+/* ---- Navbar m�vil ---- */
+@media (max-width: 600px) {
+    .navbar {
+        padding: 0.75rem 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    .navbar-brand {
+        font-size: 1.05rem;
+    }
+    #current-user-name {
+        font-size: 0.82rem;
+        max-width: 90px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    #theme-toggle, #logout-btn {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+    }
+}
+
+/* ---- App Container ---- */
+@media (max-width: 600px) {
+    .app-container {
+        padding: 0.75rem;
+    }
+}
+
+/* ---- Tabs de navegaci�n (barra deslizante) ---- */
+.tabs {
+    position: sticky;
+    top: 56px;
+    z-index: 40;
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+}
+
+@media (max-width: 600px) {
+    .tabs {
+        top: 0;
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        gap: 0;
+        padding: 0;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab {
+        padding: 0.65rem 1rem;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        border-bottom-width: 3px;
+    }
+}
+
+/* ---- Vista Inicio � botones ---- */
+.home-action-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.25rem;
+}
+.home-action-btns .btn, .home-action-btns a.btn {
+    flex: 1 1 auto;
+    min-width: 140px;
+    justify-content: center;
+    font-size: 0.88rem;
+}
+
+@media (max-width: 400px) {
+    .home-action-btns .btn, .home-action-btns a.btn {
+        min-width: 100%;
+    }
+}
+
+/* ---- Pr�ximo Domingo: fecha responsive ---- */
+@media (max-width: 480px) {
+    #next-sunday-date {
+        font-size: 0.9rem !important;
+        line-height: 1.3;
+    }
+    .flex.justify-between.items-center {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.4rem;
+    }
+}
+
+/* ---- Repertorio: header responsive ---- */
+@media (max-width: 600px) {
+    #repertoire-tab .flex.justify-between.items-center,
+    [style*="justify-between"] {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 0.6rem;
+    }
+    #repertoire-tab h2 { font-size: 1.1rem; }
+    #repertoire-date-picker { width: 100% !important; min-width: unset !important; }
+    #btn-open-yt-direct {
+        width: 100%;
+        justify-content: center;
+    }
+    #admin-complete-container {
+        flex-direction: column;
+    }
+    #admin-complete-container .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ---- Song items ---- */
+@media (max-width: 540px) {
+    .song-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.6rem;
+    }
+
+    /* Info de la cancion ocupa todo el ancho */
+    .song-item .song-info {
+        width: 100%;
+    }
+
+    /* Boton Escuchar: centrado y ancho completo */
+    .song-meta {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        justify-content: center;
+        margin-top: 0.5rem !important;
+    }
+
+    .btn-listen {
+        flex: 1 1 100%;
+        justify-content: center;
+        text-align: center;
+        padding: 0.45rem 0.75rem !important;
+        font-size: 0.82rem !important;
+    }
+
+    /* Botones de accion (carpeta, estrella, editar): centrados abajo */
+    .song-item > div:last-child {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .song-item > div:last-child .btn {
+        flex: 0 0 auto;
+        min-width: unset;
+    }
+}
+
+/* ---- STL Panel (canciones a aprender) ---- */
+@media (max-width: 540px) {
+    .stl-header { flex-wrap: wrap; gap: 0.5rem; }
+    .stl-item-header { flex-wrap: wrap; }
+    .stl-actions { flex-wrap: wrap; }
+    .stl-checks { gap: 0.4rem; }
+}
+
+/* ---- Modales ---- */
+@media (max-width: 560px) {
+    .modal-content {
+        padding: 1.25rem !important;
+        border-radius: 14px !important;
+        margin: 0.5rem;
+        max-height: 95vh;
+    }
+    .modal-header h3 { font-size: 1rem; }
+    .modal-overlay { padding: 0.5rem; align-items: flex-end; }
+    .modal-overlay .modal-content {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        max-width: 100% !important;
+        width: 100%;
+        margin: 0;
+        max-height: 92vh;
+    }
+}
+
+/* ---- Input fields m�vil ---- */
+@media (max-width: 560px) {
+    .input-field {
+        font-size: 16px; /* Evita zoom autom�tico en iOS */
+        padding: 0.7rem 0.9rem;
+    }
+    select.input-field {
+        font-size: 15px;
+    }
+}
+
+/* ---- Carpetas biblioteca ---- */
+@media (max-width: 540px) {
+    .folder-pills-bar { gap: 0.35rem; padding-bottom: 0.4rem; }
+    .folder-pill { font-size: 0.75rem; padding: 0.35rem 0.7rem; }
+}
+
+/* ---- Eventos pr�ximos ---- */
+@media (max-width: 540px) {
+    #events-tab .card { padding: 1rem; }
+    #events-tab .flex { flex-wrap: wrap; gap: 0.5rem; }
+}
+
+/* ---- Historial ---- */
+@media (max-width: 540px) {
+    #history-tab .song-item { padding: 0.75rem; }
+}
+
+/* ---- Admin Tab ---- */
+@media (max-width: 560px) {
+    #admin-tab .card { padding: 1rem; }
+    #admin-tab .btn { width: 100%; justify-content: center; margin-bottom: 0.4rem; }
+    #admin-tab h2 { font-size: 1.05rem; }
+}
+
+/* ---- Bot�n FAB mejorado para m�vil ---- */
+.fab {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+    font-size: 1.4rem;
+    box-shadow: 0 6px 16px rgba(212, 175, 55, 0.5);
+}
+
+/* ---- Bottom Nav Shortcuts (solo m�vil) ---- */
+.mobile-bottom-nav {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    /* Deja espacio abajo para el bottom nav */
+    .app-container {
+        padding-bottom: 5rem;
+    }
+
+    .mobile-bottom-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: var(--bg-card);
+        border-top: 1px solid var(--border-color);
+        z-index: 60;
+        box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+        padding: 0 0.25rem;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .mobile-nav-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.55rem 0.25rem 0.45rem;
+        cursor: pointer;
+        gap: 0.2rem;
+        font-size: 0.6rem;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: color 0.2s;
+        -webkit-tap-highlight-color: transparent;
+        user-select: none;
+        border: none;
+        background: none;
+        min-height: 56px;
+    }
+
+    .mobile-nav-item i {
+        width: 22px;
+        height: 22px;
+    }
+
+    .mobile-nav-item.active {
+        color: var(--primary);
+    }
+    [data-theme="dark"] .mobile-nav-item.active {
+        color: var(--accent);
+    }
+
+    .mobile-nav-item.active i {
+        stroke-width: 2.5;
+    }
+
+    /* Ocultar tabs superiores en m�vil para que no haya duplicados */
+    .tabs {
+        display: none;
+    }
+
+    /* Navbar m�s compacto */
+    .navbar {
+        padding: 0.6rem 1rem;
+    }
+    .app-container {
+        padding-top: 1rem;
+    }
+}
+
+/* ---- Repertorio: Indicador de turno responsive ---- */
+@media (max-width: 560px) {
+    #repertoire-turn-indicator > div {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.3rem;
+        font-size: 0.82rem;
+    }
+}
+
+/* ---- Cards generales en m�vil ---- */
+@media (max-width: 540px) {
+    .card {
+        padding: 1rem;
+        border-radius: 10px;
+    }
+}
+
+/* ---- Biblioteca: botones de acci�n en canciones ---- */
+@media (max-width: 540px) {
+    .library-song-actions {
+        display: flex;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+}
+
+/* =============================================
+   FIX OVERFLOW HORIZONTAL (iPhone / Android)
+   ============================================= */
+
+/* Bloquear scroll horizontal en todo el documento */
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Evitar que cualquier elemento hijo cause overflow */
+#app-view,
+.app-container,
+.view-section,
+.card,
+.stl-panel,
+.song-item,
+.tabs,
+.modal-content {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Flex containers que se rompen en ancho */
+.flex, [style*="display:flex"], [style*="display: flex"] {
+    min-width: 0;
+}
+
+/* Select del repertorio: nunca m�s ancho que su contenedor */
+#repertoire-date-picker {
+    max-width: 100%;
+    width: 100% !important;
+    min-width: unset !important;
+    box-sizing: border-box;
+}
+
+/* Bot�n de YouTube en repertorio: ancho completo en m�vil */
+@media (max-width: 640px) {
+    #btn-open-yt-direct {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Stack vertical del header de repertorio */
+    #repertoire-tab > div[style*="justify-between"],
+    #repertoire-tab > div.flex {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100%;
+    }
+
+    /* Todos los hijos del header de repertorio al 100% */
+    #repertoire-tab > div[style*="justify-between"] > *,
+    #repertoire-tab > div.flex > * {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* El div interno que tiene el bot�n y el select */
+    #repertoire-tab > div > div[style*="display:flex"],
+    #repertoire-tab > div > div[style*="flex-wrap"] {
+        flex-direction: column !important;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    /* Song items no se salen */
+    .song-item {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    /* Canciones a aprender: panel completo */
+    .stl-panel {
+        overflow: hidden;
+        width: 100%;
+    }
+
+    /* Textos largos que corten con ellipsis */
+    .song-info h4,
+    .pl-queue-name,
+    .stl-item-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
+
+    /* Navbar: no overflow */
+    .navbar {
+        overflow: hidden;
+    }
+}
+
+/* =============================================
+   HEADER REPERTORIO � limpio y sin overflow
+   ============================================= */
+
+.rep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rep-header h2 {
+    flex-shrink: 0;
+}
+
+.rep-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.btn-yt {
+    background: linear-gradient(135deg, #ff0000, #c4302b) !important;
+    color: #fff !important;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.btn-yt:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.rep-date-picker {
+    width: auto;
+    min-width: 180px;
+    max-width: 260px;
+}
+
+/* --- M�vil: stack vertical, 100% ancho --- */
+@media (max-width: 600px) {
+    .rep-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rep-header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-yt {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rep-date-picker {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: unset !important;
+    }
+}
