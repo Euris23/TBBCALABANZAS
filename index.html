@@ -15,6 +15,31 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <!-- EmailJS SDK -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <!-- Configuración Firebase -->
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAIj50c3y-3KdDrFnYXkTwyHShO2vz3640",
+        authDomain: "tbbc-a31f7.firebaseapp.com",
+        projectId: "tbbc-a31f7",
+        storageBucket: "tbbc-a31f7.firebasestorage.app",
+        messagingSenderId: "24963622399",
+        appId: "1:24963622399:web:bd86255c0923c540a833ca",
+        measurementId: "G-NYEN784LSQ"
+      };
+      // Inicializar Firebase
+      if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        if (firebase.analytics) {
+          firebase.analytics();
+        }
+        window.firestoreDb = firebase.firestore();
+        console.log("Firebase conectado exitosamente.");
+      }
+    </script>
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>

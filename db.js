@@ -52,6 +52,33 @@ const initialData = {
 class Database {
     constructor() {
         this.data = this.loadData();
+        this.initFirebaseSync();
+    }
+
+    initFirebaseSync() {
+        if (typeof window !== 'undefined' && window.firestoreDb) {
+            const docRef = window.firestoreDb.collection('appData').doc('tbbc_db');
+            
+            // Suscribirse a cambios en tiempo real
+            docRef.onSnapshot(doc => {
+                if (doc.exists) {
+                    const cloudData = doc.data();
+                    if (cloudData && cloudData.users) {
+                        this.data = cloudData;
+                        localStorage.setItem(DB_KEY, JSON.stringify(this.data));
+                        // Re-render app view if app is initialized
+                        if (typeof renderApp === 'function') {
+                            renderApp();
+                        }
+                    }
+                } else {
+                    // Si no existe en Firestore, guardar datos iniciales
+                    this.saveData();
+                }
+            }, err => {
+                console.warn("Error en sincronización en tiempo real Firebase:", err);
+            });
+        }
     }
 
     loadData() {
@@ -143,6 +170,10 @@ class Database {
 
     saveData() {
         localStorage.setItem(DB_KEY, JSON.stringify(this.data));
+        if (typeof window !== 'undefined' && window.firestoreDb) {
+            window.firestoreDb.collection('appData').doc('tbbc_db').set(this.data)
+                .catch(err => console.error("Error al guardar en Firebase:", err));
+        }
     }
 
     // --- Users ---
